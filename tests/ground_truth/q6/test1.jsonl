@@ -1,0 +1,11 @@
+{"usr_id": 1, "usr_name": "Alice Johnson", "mov_id": 2, "mov_name": "The Godfather", "hrs_watched": 1.2}
+{"usr_id": 2, "usr_name": "Bob Smith", "mov_id": 3, "mov_name": "The Dark Knight", "hrs_watched": 1.5}
+{"usr_id": 3, "usr_name": "Charlie Brown", "mov_id": 8, "mov_name": "Fight Club", "hrs_watched": 1.5}
+{"usr_id": 4, "usr_name": "Diana Prince", "mov_id": 2, "mov_name": "The Godfather", "hrs_watched": 4.5}
+{"usr_id": 5, "usr_name": "Edward Nigma", "mov_id": 9, "mov_name": "The Lord of the Rings: The Fellowship of the Ring", "hrs_watched": 4.5}
+{"usr_id": 6, "usr_name": "Fiona Gallagher", "mov_id": null, "mov_name": null, "hrs_watched": null}
+{"usr_id": 7, "usr_name": "George Costanza", "mov_id": null, "mov_name": null, "hrs_watched": null}
+{"usr_id": 8, "usr_name": "Helen Parr", "mov_id": null, "mov_name": null, "hrs_watched": null}
+{"usr_id": 9, "usr_name": "Ian Malcolm", "mov_id": null, "mov_name": null, "hrs_watched": null}
+{"usr_id": 10, "usr_name": "Julia Child", "mov_id": null, "mov_name": null, "hrs_watched": null}
+{"usr_id": 11, "usr_name": "Aron Gu", "mov_id": null, "mov_name": null, "hrs_watched": null}
