@@ -2,15 +2,19 @@ WITH TopLikes AS (
     -- Find the movies with the most total likes (movie likes + watchlist likes)
     SELECT mov_id, title, (like_count + wa_like_count) AS total_likes
     FROM movieStats
-    ORDER BY total_likes DESC
-    LIMIT 1  -- Get only the top movie (or movies in case of ties)
+    WHERE (like_count + wa_like_count) = (
+        SELECT MAX(like_count + wa_like_count)
+        FROM movieStats
+    )
 ),
 TopHours AS (
     -- Find the movies with the most hours watched
     SELECT mov_id, title, hrs_watched
     FROM movieStats
-    ORDER BY hrs_watched DESC
-    LIMIT 1  -- Get only the top movie (or movies in case of ties)
+    WHERE hrs_watched = (
+        SELECT MAX(hrs_watched)
+        FROM movieStats
+    )
 )
 SELECT 
     ms.mov_id, 
@@ -22,4 +26,7 @@ SELECT
         ELSE NULL
     END AS top_type
 FROM 
-    movieStats ms;
+    movieStats ms
+WHERE ms.mov_id IN (SELECT mov_id FROM TopLikes) 
+   OR ms.mov_id IN (SELECT mov_id FROM TopHours)
+ORDER BY top_type DESC, ms.mov_id;

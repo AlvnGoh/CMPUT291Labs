@@ -1,4 +1,13 @@
-WITH UserWatchTime AS (
+WITH UserMovies AS (
+    -- Movies directly liked by the user and movies in watchlists liked by the user
+    SELECT usr_id, mov_id
+    FROM like_movie
+    UNION
+    SELECT lw.usr_id, wi.mov_id
+    FROM like_watchlist lw
+    JOIN watchlist_include wi ON lw.wa_id = wi.wa_id
+),
+UserWatchTime AS ( 
     -- Calculate the total time each user has spent watching movies
     SELECT usr_id, SUM(julianday(ses_end) - julianday(ses_start)) * 24 AS total_watch_time
     FROM sessions
@@ -12,17 +21,10 @@ TopUsers AS (
     LIMIT 5
 ),
 UserLikedMovies AS (
-    -- Calculate the total number of movies liked by each user
+    -- Calculate the total number of distinct movies liked by each user (including those in liked watchlists)
     SELECT usr_id, COUNT(DISTINCT mov_id) AS liked_movies_count
-    FROM like_movie
+    FROM UserMovies
     GROUP BY usr_id
-),
-UserLikedWatchlists AS (
-    -- Calculate the total number of movies in watchlists liked by each user
-    SELECT l.usr_id, COUNT(DISTINCT wi.mov_id) AS liked_watchlist_movies_count
-    FROM like_watchlist l
-    JOIN watchlist_include wi ON l.wa_id = wi.wa_id
-    GROUP BY l.usr_id
 ),
 UserMostPopularWatchlist AS (
     -- Find the most popular watchlist for each user (the watchlist they created with the most likes)
@@ -45,11 +47,11 @@ TopUserMostPopularWatchlist AS (
 )
 -- Final query to join everything and return the required data
 SELECT tu.usr_id, 
-       COALESCE(ulm.liked_movies_count, 0) + COALESCE(ulw.liked_watchlist_movies_count, 0) AS total_movies_liked,
+       COALESCE(ulm.liked_movies_count, 0) AS total_movies_liked,
        tumpw.wa_id AS most_popular_watchlist_id,
        tumpw.title AS most_popular_watchlist_title,
-       COALESCE(tumpw.like_count, 0) AS most_popular_watchlist_likes
+       tumpw.like_count AS most_popular_watchlist_likes
 FROM TopUsers tu
 LEFT JOIN UserLikedMovies ulm ON tu.usr_id = ulm.usr_id
-LEFT JOIN UserLikedWatchlists ulw ON tu.usr_id = ulw.usr_id
-LEFT JOIN TopUserMostPopularWatchlist tumpw ON tu.usr_id = tumpw.usr_id;
+LEFT JOIN TopUserMostPopularWatchlist tumpw ON tu.usr_id = tumpw.usr_id
+ORDER BY tu.usr_id;
