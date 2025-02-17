@@ -27,3 +27,5 @@ LEFT JOIN have_dir hd ON m.mov_id = hd.mov_id
 GROUP BY 
     m.mov_id, 
     m.title;
+
+Select * FROM movieStats;
