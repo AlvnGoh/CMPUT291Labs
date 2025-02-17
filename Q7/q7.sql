@@ -25,7 +25,7 @@ UsersFollowingAron AS (
     GROUP BY l.wa_id
 )
 -- Final query to select the required watchlist information
-SELECT w.wa_id, 
+SELECT wm.wa_id, 
        wm.movie_count, 
        ulw.users_liked_count
 FROM WatchlistMovies wm

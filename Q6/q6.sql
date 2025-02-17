@@ -24,7 +24,7 @@ MaxWatchHours AS (
 )
 -- Final query to select the required fields
 SELECT u.usr_id, 
-       u.name AS user_name, 
+       u2.name AS user_name, 
        mw.mov_id, 
        mw.movie_title, 
        mw.total_hours

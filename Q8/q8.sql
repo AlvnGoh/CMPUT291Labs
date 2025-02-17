@@ -1,7 +1,7 @@
 WITH UserWatchTime AS (
     -- Calculate the total time each user has spent watching movies
-    SELECT usr_id, SUM(hr_count) AS total_watch_time
-    FROM ses_watched
+    SELECT usr_id, SUM(julianday(ses_end) - julianday(ses_start)) * 24 AS total_watch_time
+    FROM sessions
     GROUP BY usr_id
 ),
 TopUsers AS (
