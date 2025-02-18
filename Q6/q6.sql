@@ -18,17 +18,18 @@ MovieWatchHours AS (
 ),
 MaxWatchHours AS (
     -- For each user, find the maximum number of hours spent watching a movie
-    SELECT usr_id, mov_id, movie_title, MAX(total_hours) AS max_hours
+    SELECT usr_id, MAX(total_hours) AS max_hours
     FROM MovieWatchHours
     GROUP BY usr_id
 )
 -- Final query to select the required fields
 SELECT u.usr_id, 
        u2.name AS user_name, 
-       mh.mov_id, 
-       mh.movie_title, 
-       mh.max_hours
+       mwh.mov_id, 
+       mwh.movie_title, 
+       mwh.total_hours AS max_hours
 FROM UserFollowers u
 LEFT JOIN MaxWatchHours mh ON u.usr_id = mh.usr_id
+LEFT JOIN MovieWatchHours mwh ON mh.usr_id = mwh.usr_id AND mwh.total_hours = mh.max_hours
 LEFT JOIN users u2 ON u2.usr_id = u.usr_id
 ORDER BY u.usr_id;

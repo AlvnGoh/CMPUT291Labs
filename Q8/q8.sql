@@ -9,16 +9,20 @@ WITH UserMovies AS (
 ),
 UserWatchTime AS ( 
     -- Calculate the total time each user has spent watching movies
-    SELECT usr_id, SUM(julianday(ses_end) - julianday(ses_start)) * 24 AS total_watch_time
-    FROM sessions
+    SELECT usr_id, SUM(fr_cnt) AS total_watch_time
+    FROM ses_watched
     GROUP BY usr_id
 ),
-TopUsers AS (
-    -- Find the top 5 users based on the total time spent watching movies
-    SELECT usr_id, total_watch_time
+RankedUsers AS (
+    -- Rank users based on total_watch_time (including ties)
+    SELECT usr_id, total_watch_time, RANK() OVER (ORDER BY total_watch_time DESC) AS rank
     FROM UserWatchTime
-    ORDER BY total_watch_time DESC
-    LIMIT 5
+),
+TopUsers AS (
+    -- Get users whose rank is less than or equal to 5 (to include ties)
+    SELECT usr_id, total_watch_time
+    FROM RankedUsers
+    WHERE rank <= 5  -- Include users with ranks 1 to 5 (including ties)
 ),
 UserLikedMovies AS (
     -- Calculate the total number of distinct movies liked by each user (including those in liked watchlists)

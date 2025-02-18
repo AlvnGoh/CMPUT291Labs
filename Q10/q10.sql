@@ -16,17 +16,23 @@ TopHours AS (
         FROM movieStats
     )
 )
+-- Combine the TopLikes and TopHours, allowing each movie to be listed twice if necessary
 SELECT 
     ms.mov_id, 
     ms.title,
-    -- Determine if it's top in likes or hours watched
-    CASE
-        WHEN ms.mov_id IN (SELECT mov_id FROM TopLikes) THEN 'top in likes'
-        WHEN ms.mov_id IN (SELECT mov_id FROM TopHours) THEN 'top in hours watched'
-        ELSE NULL
-    END AS top_type
+    'top in likes' AS top_type
 FROM 
     movieStats ms
-WHERE ms.mov_id IN (SELECT mov_id FROM TopLikes) 
-   OR ms.mov_id IN (SELECT mov_id FROM TopHours)
-ORDER BY top_type DESC, ms.mov_id;
+WHERE ms.mov_id IN (SELECT mov_id FROM TopLikes)
+
+UNION ALL
+
+SELECT 
+    ms.mov_id, 
+    ms.title,
+    'top in hours watched' AS top_type
+FROM 
+    movieStats ms
+WHERE ms.mov_id IN (SELECT mov_id FROM TopHours)
+
+ORDER BY mov_id, top_type DESC;
